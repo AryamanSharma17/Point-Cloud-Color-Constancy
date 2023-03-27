@@ -64,6 +64,12 @@ For training
 ```shell
 python train_main.py --datasets NAME OF DATASET --foldn FOLD NUMBER --sizes INPUT SIZE OF POINT --batch_size BATCH SIZE --nepoch EPOCH --gpu_ids GPU ID
 ```
+Aryaman says:
+Try running this file:
+```shell
+python train_main.py --datasets ETH3D --foldn 1 --sizes 64 --batch_size 1 --nepoch 100 --gpu_ids 0
+
+```
 
 The `./pointnet/DataLoader.py` can be changed if your use your own data.
 
