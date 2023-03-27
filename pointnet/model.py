@@ -70,10 +70,9 @@ class STN3d(nn.Module):
         batchsize = x.size()[0]
         x = F.relu(self.bn1(self.conv1(x)))
         x = F.relu(self.bn2(self.conv2(x)))
-        x = F.relu(self.bn3(self.conv3(x)))
         x = torch.max(x, 2, keepdim=True)[0]
         # print(x.shape)
-        x = x.view(-1, 1024)
+        x = x.view(-1, 128)
         # print(x.shape)
         x = F.relu(self.bn4(self.fc1(x)))
         x = F.relu(self.bn5(self.fc2(x)))
@@ -166,13 +165,12 @@ class STNkd(nn.Module):
         x = x + iden
         x = x.view(-1, self.k, self.k)
         return x
-
-    
+        
 class PointNetfeat(nn.Module):
     def __init__(self, global_feat = True, feature_transform = False):
         super(PointNetfeat, self).__init__()
         self.stn = STN3d()
-        self.conv1 = torch.nn.Conv1d(6, 64, 1)
+        self.conv1 = torch.nn.Conv1d(3, 64, 1)
         self.conv2 = torch.nn.Conv1d(64, 128, 1)
         self.conv3 = torch.nn.Conv1d(128, 1024, 1)
         self.bn1 = nn.BatchNorm1d(64)
@@ -184,11 +182,9 @@ class PointNetfeat(nn.Module):
             self.fstn = STNkd(k=64)
 
     def forward(self, x):
-        n_pts = x.size()[2]
+        n_pts = x.size()[1]
         trans = self.stn(x)
-        # print('trans.shape',trans.shape)
         x = x.transpose(2, 1)
-        # print('x.shape',x.shape)
         x = torch.bmm(x, trans)
         x = x.transpose(2, 1)
         x = F.relu(self.bn1(self.conv1(x)))
@@ -211,6 +207,7 @@ class PointNetfeat(nn.Module):
         else:
             x = x.view(-1, 1024, 1).repeat(1, 1, n_pts)
             return torch.cat([x, pointfeat], 1), trans, trans_feat
+
 
 
 class PCCC(nn.Module):

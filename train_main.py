@@ -52,9 +52,9 @@ dataset_train = PcdColor(train=True,foldn=opt.foldnum,sizes=opt.sizes)
 dataloader_train = torch.utils.data.DataLoader(dataset_train, batch_size=opt.batch_size, shuffle=True,
                                                num_workers=opt.workers)
 len_dataset_train = len(dataset_train)
-print('len_dataset_train:', len(dataset_train))
+print('len_dataset_train:', len_dataset_train)
 dataset_test = PcdColor(train=False,foldn=opt.foldnum,sizes=opt.sizes)
-dataloader_test = torch.utils.data.DataLoader(dataset_test, batch_size=1, shuffle=True, num_workers=opt.workers)
+dataloader_test = torch.utils.data.DataLoader(dataset_test, batch_size=64, shuffle=True, num_workers=opt.workers)
 len_dataset_test = len(dataset_test)
 print('len_dataset_test:', len(dataset_test))
 # print('training fold %d' % opt.foldnum)
@@ -83,7 +83,7 @@ val_loss = AverageMeter()
 print('start train.....')
 best_val_loss = 999999
 step = 0
-for epoch in range(opt.nepoch):
+for epoch in range(1):
     # train mode
     time_use1 = 0
     train_loss.reset()
